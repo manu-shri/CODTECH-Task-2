@@ -1,0 +1,99 @@
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+class Game {
+public:
+    Game() : score(0), currentRoom(0) {
+        srand(time(0)); // Initialize random seed
+    }
+
+    void start() {
+        cout << "Welcome to the Simple Text Adventure Game!" << endl;
+        cout << "Navigate through rooms, solve challenges, and earn points!" << endl;
+        while (currentRoom < 3) {
+            displayRoom();
+            getInput();
+            if (currentRoom == 3) {
+                cout << "Congratulations! You've completed the adventure!" << endl;
+                cout << "Your final score is: " << score << " points." << endl;
+                break;
+            }
+        }
+    }
+
+private:
+    int score;
+    int currentRoom;
+
+    void displayRoom() {
+        cout << "\nYou are in Room " << currentRoom + 1 << "." << endl;
+        if (currentRoom == 0) {
+            cout << "There's a locked door ahead. Solve a puzzle to open it." << endl;
+        } else if (currentRoom == 1) {
+            cout << "You're in a dark room. Solve a math riddle to move forward." << endl;
+        } else if (currentRoom == 2) {
+            cout << "You have reached the final room. A treasure chest awaits!" << endl;
+        }
+    }
+
+    void getInput() {
+        string action;
+        cout << "What will you do? (type 'solve' to attempt the challenge or 'quit' to end the game): ";
+        getline(cin, action);
+
+        if (action == "quit") {
+            cout << "You decided to quit. Your final score is: " << score << " points." << endl;
+            exit(0);
+        } else if (action == "solve") {
+            solveChallenge();
+        } else {
+            cout << "Invalid action. Please type 'solve' or 'quit'." << endl;
+        }
+    }
+
+    void solveChallenge() {
+        if (currentRoom == 0) {
+            int puzzleAnswer = rand() % 10 + 1; // Random number between 1 and 10
+            int playerAnswer;
+            cout << "Solve the puzzle! Guess the correct number between 1 and 10: ";
+            cin >> playerAnswer;
+            cin.ignore(); // To clear the newline from the input buffer
+            if (playerAnswer == puzzleAnswer) {
+                cout << "Correct! You unlocked the door and earned 10 points." << endl;
+                score += 10;
+                currentRoom++;
+            } else {
+                cout << "Incorrect. Try again!" << endl;
+            }
+        } else if (currentRoom == 1) {
+            int num1 = rand() % 20 + 1;
+            int num2 = rand() % 20 + 1;
+            int correctAnswer = num1 + num2;
+            int playerAnswer;
+            cout << "Solve the math riddle: What is " << num1 << " + " << num2 << "? ";
+            cin >> playerAnswer;
+            cin.ignore(); // Clear the buffer
+            if (playerAnswer == correctAnswer) {
+                cout << "Correct! You solved the riddle and earned 20 points." << endl;
+                score += 20;
+                currentRoom++;
+            } else {
+                cout << "Incorrect. Try again!" << endl;
+            }
+        } else if (currentRoom == 2) {
+            cout << "Congratulations! You reached the treasure chest." << endl;
+            score += 30;
+            currentRoom++;
+        }
+    }
+};
+
+int main() {
+    Game game;
+    game.start();
+    return 0;
+}
